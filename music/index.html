@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title> Edu pro </title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/jpg" href="C:\Users\Student\Downloads\grad1.png"/>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <style>
+
+.jumbotron{
+  width:100%;
+  height:700px;
+  background-image: url(images/music-1.jpg);
+  background-size: cover;
+}
+
+.img1{
+  width:25px;
+  height: 25px;
+}
+#playpausebtn{
+  background: url(images/pause1.png) no-repeat ;
+  border:none;
+  cursor:pointer;
+   outline:none;
+   width: 64px;
+   height:64px;
+float:left;
+
+}
+#myBtn{
+  background-image: url(images/list5.png)  ;
+  border:1px solid transparent ;
+  cursor:pointer;
+   outline:none;
+ width:48px;
+ height:48px;
+
+border-radius: 100%;
+float: right;
+margin-right: 15px;
+margin-top: -5px;
+
+}
+#mutebtn{
+  background: transparent;
+  border: transparent;
+}
+.container{
+  width:100%;
+  background-color:transparent;
+   position:fixed;
+   bottom: -1px;
+
+}
+/* The Modal (background) */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    padding-top: 100px; /* Location of the box */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: white; /* Fallback color */
+    background-color: white; /* Black w/ opacity */
+    box-shadow: none;
+}
+
+/* Modal Content */
+.modal-content {
+    position: relative;
+    background-color: white;
+    margin: auto;
+    padding: 0;
+    border: 1px solid rgb(250,250,250);
+    width: 80%;
+  box-shadow: 0 4px 8px 0 white,0 6px 20px 0 white;
+    -webkit-animation-name: animatetop;
+    -webkit-animation-duration: 0.4s;
+    animation-name: animatetop;
+    animation-duration: 0.4s
+}
+#mylist{
+  width: 100%;
+  border:none;
+  padding: 10px;
+  outline: none;
+  color:grey;
+cursor: pointer;
+}
+select.option{
+  padding: 50px;
+
+}
+
+/* Add Animation */
+@-webkit-keyframes animatetop {
+    from {top:-300px; opacity:0}
+    to {top:0; opacity:1}
+}
+
+@keyframes animatetop {
+    from {top:-300px; opacity:0}
+    to {top:0; opacity:1}
+}
+
+/* The Close Button */
+.close {
+    color: black;
+    float: right;
+    font-size: 30px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color:inherit;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.modal-header {
+    padding: 2px 16px;
+    background-color: white;
+    color: inherit;
+    border: none;
+    text-align: center;
+}
+
+.modal-body {padding: 2px 16px;
+border: none;}
+
+.modal-footer {
+    padding: 2px 16px;
+    background-color: white;
+    color:inherit;
+    border: none;
+}
+input{ outline:none; }
+input#seekslider{
+	width:400px;
+margin-top: 70px;
+}
+input#volumeslider{
+	width: 100px;
+  margin-top: 70px;
+}
+input[type='range'] {
+    -webkit-appearance: none !important;
+	margin-left: 10px;
+margin-top: 1px;
+	padding:0px;
+    background:white;
+    height:3px;
+	border-bottom:#333 1px solid;
+}
+input[type='range']::-ms-fill-lower  {
+	background:#000;
+}
+input[type='range']::-ms-fill-upper  {
+	background:#000;
+}
+input[type='range']::-moz-range-track {
+	border:none;
+    background: #000;
+}
+input[type='range']::-webkit-slider-thumb {
+    -webkit-appearance: none !important;
+    background:white;
+    height:6px;
+    width:6px;
+	border-radius:100%;
+	cursor:pointer;
+}
+input[type='range']::-moz-range-thumb {
+    background: radial-gradient(#FFF, #333);
+    height:11px;
+    width:11px;
+	border-radius:100%;
+	cursor:pointer;
+}
+input[type='range']::-ms-thumb {
+    -webkit-appearance: none !important;
+    background: radial-gradient(#FFF, #333);
+    height:11px;
+    width:11px;
+	border-radius:100%;
+	cursor:pointer;
+}
+div#timebox{
+	display:inline-block;
+	width:100px;
+	background:transparent;
+	text-align:center;
+	color: white;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size:11px;
+  margin-top: 65px;
+}
+#songli{
+  cursor: pointer;
+}
+#options{
+
+  padding: 20px;
+  font-size: 20px;
+  outline-offset: inherit;
+
+}
+#h1{
+  color:white;
+  margin-top:15%;
+}
+#h2{
+  color:white;
+  margin-top:%;
+}
+  </style>
+
+  <script>
+var audio, playbtn, mutebtn, seekslider, volumeslider, seeking=false, seekto, curtimetext, durtimetext, playlist_status,
+ dir, playlist, ext, agent, mylist;
+function initAudioPlayer(){
+  dir = "media/";
+	playlist = ["aa","dont stop","mana ma"];
+	playlist_index = 0;
+	ext = ".mp3";
+    agent = navigator.userAgent.toLowerCase();
+    if(agent.indexOf('firefox') != -1 || agent.indexOf('opera') != -1) {
+        ext = ".ogg";
+    }
+	// Set object references
+	/*playbtn = document.getElementById("playpausebtn");
+	mutebtn = document.getElementById("mutebtn");
+  seekslider = document.getElementById("seekslider");
+	volumeslider = document.getElementById("volumeslider");
+  curtimetext = document.getElementById("curtimetext");
+	durtimetext = document.getElementById("durtimetext");
+  playlist_status = document.getElementById("playlist_status");
+  //var list = element.attr('song');
+ mylist = document.getElementById("mylist");*/
+  // Audio Object
+	audio = new Audio();
+	audio.src = dir+playlist[0]+ext;
+	audio.loop = false;
+	audio.play();
+	playlist_status.innerHTML = "Track "+(playlist_index+1)+" - "+ playlist[playlist_index]+ext;
+
+	// Add Event Handling
+/*	playbtn.addEventListener("click",playPause);
+	mutebtn.addEventListener("click", mute);
+  seekslider.addEventListener("mousedown", function(event){ seeking=true; seek(event); });
+	seekslider.addEventListener("mousemove", function(event){ seek(event); });
+	seekslider.addEventListener("mouseup",function(){ seeking=false; });
+	volumeslider.addEventListener("mousemove", setvolume);
+  audio.addEventListener("timeupdate", function(){ seektimeupdate(); });
+  audio.addEventListener("ended", function(){ switchTrack(); });
+  mylist.addEventListener("change", changeTrack);*/
+	// Functions
+ /* function switchTrack(){
+		if(playlist_index == (playlist.length - 1)){
+			playlist_index = 0;
+		} else {
+		    playlist_index++;
+		}
+		playlist_status.innerHTML = "Track "+(playlist_index+1)+" - "+ playlist[playlist_index]+ext;
+		audio.src = dir+playlist[playlist_index]+ext;
+	    audio.play();
+	}
+	function playPause(){
+		if(audio.paused){
+		    audio.play();
+		    playbtn.style.background = "url(images/pause1.png) no-repeat";
+
+	    } else {
+		    audio.pause();
+		    playbtn.style.background = "url(images/play2.png) no-repeat";
+
+	    }
+	}
+	function mute(){
+		if(audio.muted){
+		    audio.muted = false;
+		    mutebtn.style.background = "url(images/speaker.png) no-repeat";
+	    } else {
+		    audio.muted = true;
+		    mutebtn.style.background = "url(images/speaker_muted.png) no-repeat";
+	    }
+	}
+  function seek(event){
+	    if(seeking){
+		    seekslider.value = event.clientX - seekslider.offsetLeft;
+	        seekto = audio.duration * (seekslider.value / 400);
+	        audio.currentTime = seekto;
+	    }
+    }
+	function setvolume(){
+	    audio.volume = volumeslider.value / 400;
+    }
+    function seektimeupdate(){
+		var nt = audio.currentTime * (400 / audio.duration);
+		seekslider.value = nt;
+		var curmins = Math.floor(audio.currentTime / 60);
+	    var cursecs = Math.floor(audio.currentTime - curmins * 60);
+	    var durmins = Math.floor(audio.duration / 60);
+	    var dursecs = Math.floor(audio.duration - durmins * 60);
+		if(cursecs < 10){ cursecs = "0"+cursecs; }
+	    if(dursecs < 10){ dursecs = "0"+dursecs; }
+	    if(curmins < 10){ curmins = "0"+curmins; }
+	    if(durmins < 10){ durmins = "0"+durmins; }
+		curtimetext.innerHTML = curmins+":"+cursecs;
+	    durtimetext.innerHTML = durmins+":"+dursecs;
+	}
+  function changeTrack(event){
+		audio.src = dir+event.target.value+ext;
+	    audio.play();
+	}*/
+}
+
+window.addEventListener("load", initAudioPlayer);
+
+
+</script>
+</head>
+<body>
+<div class = "jumbotron text-center">
+  <button id="myBtn"></button>
+<div class= "container text-center">
+  <div class = "row">
+    <div class = "col-sm-4">
+
+<button  id ="playpausebtn"></button>
+
+<input id="seekslider" type="range" min="0" max="400" value="0" step="1">
+</div>
+<div id="timebox" class ="col-sm-2">
+  <span id="curtimetext">00:00</span> / <span id="durtimetext">00:00</span>
+</div>    <div class = "col-sm-1">
+<button id="mutebtn"></button></div>
+<div class = "col-sm-1">
+  <img src="images/vol1.png"style ="border-radius:100%;margin-top:10px;" class="reponsive"></div>
+
+<input id="volumeslider" type="range" min="0" max="100" value="100" step="1">
+
+</div>
+</div>
+
+<h1 id = "h1"> B H A R A T H   R O C K S T A R 'S</h1>
+<h2 id = "h2">F E E L   T H E    S H A D E S    O F    M U S I C  </h2>
+</div>
+<h2 id="playlist_status" style="color:grey;margin-top:10%;"></h2>
+<!-- The Modal -->
+<div id="myModal" class="modal">
+
+  <!-- Modal content -->
+  <div class="modal-content">
+    <div class="modal-header">
+      <span class="close">&times;</span>
+      <h2>CHOOSE YOUR SONG FROM THE LIST</h2>
+    </div>
+    <div class="modal-body">
+   <select id="mylist" size="4">
+  <option id = "options"value="aa">andamain lokam<h2>          sivam-movie</h2></option>
+  <option id = "options"value="dont stop">Stoker</option><br><br>
+  <option id = "options"value="mana ma">Skull Fire</option><br><br>
+  <option id = "options"value="Scurvy_Pirate">Scurvy Pirate</option>
+</select>
+    </div>
+    <div class="modal-footer">
+      <h3></h3>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// Get the modal
+var modal = document.getElementById('myModal');
+
+// Get the button that opens the modal
+var btn = document.getElementById("myBtn");
+
+// Get the <span> element that closes the modal
+var span = document.getElementsByClassName("close")[0];
+
+// When the user clicks the button, open the modal
+btn.onclick = function() {
+    modal.style.display = "block";
+}
+
+// When the user clicks on <span> (x), close the modal
+span.onclick = function() {
+    modal.style.display = "none";
+}
+
+// When the user clicks anywhere outside of the modal, close it
+//window.onclick = function(event) {
+ //   if (event.target == modal) {
+    //    modal.style.display = "none";
+  //  }
+//}
+</script>
+
+<div class="panel">ejkehjehfeefhjfghjfgb</div>
+</body>
+</html>
